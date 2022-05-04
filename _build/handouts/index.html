@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Java Dates and Times | Devmountain Foundations</title>
+
+      <link
+        href="_static/pygments.css"
+        rel="stylesheet"
+        type="text/css"
+      />
+      <link href="_static/devmountain.css" rel="stylesheet" type="text/css" />
+          <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+          <link rel="stylesheet" type="text/css" href="_static/devmountain.css" />
+          <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+          <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+
+      <script src="_static/pdfobject.min.js"></script>
+      
+  </head>
+  <body>
+      <div id="handouts-container">
+        <header id="page-header">
+            <p id="project-title">Devmountain Foundations</p>
+            <p id="page-title">Java Dates and Times</p>
+              <p id="backlink">
+                <a href="/"> &laquo; Back to Homepage </a>
+              </p>
+        </header>
+
+        <nav id="page-toc"><ul>
+<li><a class="reference internal" href="#">Java Dates and Times</a><ul>
+<li><a class="reference internal" href="#intro">Intro</a></li>
+<li><a class="reference internal" href="#instructions">Instructions</a><ul>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#part-one">Part One</a></li>
+<li><a class="reference internal" href="#part-two">Part Two</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a><ul>
+<li><a class="reference internal" href="#getting-current-date-and-time">Getting Current Date and Time</a></li>
+<li><a class="reference internal" href="#comparing-dates-with-java-time">Comparing Dates with <code class="docutils literal notranslate"><span class="pre">java.time.*</span></code></a></li>
+<li><a class="reference internal" href="#comparing-dates-with-legacy-java-util-date">Comparing Dates with legacy <code class="docutils literal notranslate"><span class="pre">java.util.Date</span></code></a></li>
+<li><a class="reference internal" href="#comparing-using-legacy-java-util-calendar">Comparing Using legacy <code class="docutils literal notranslate"><span class="pre">java.util.Calendar</span></code></a></li>
+<li><a class="reference internal" href="#convert-string-to-localdate">Convert String to LocalDate</a></li>
+<li><a class="reference internal" href="#convert-string-to-localdatetime">Convert String to LocalDateTime</a></li>
+<li><a class="reference internal" href="#common-date-and-time-patterns">Common Date and Time Patterns</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+
+        <main id="page-content">
+            <section class="section" id="java-dates-and-times">
+<h1>Java Dates and Times</h1>
+<section class="section" id="intro">
+<h2>Intro</h2>
+<p>In this lab, you’ll be working with dates and times in Java. This is a very important skill as most modern applications deal with dates and times in some capacity.</p>
+<div class="admonition note">
+<p class="admonition-title">References</p>
+<div class="admonition-body docutils container">
+<p>The last section of this page contains helpful references on working with dates and times. Feel free to refer to that section as you complete this exercise.</p>
+</div>
+</div>
+</section>
+<section class="section" id="instructions">
+<h2>Instructions</h2>
+<section class="section" id="setup">
+<h3>Setup</h3>
+<ul class="simple">
+<li><p>Add a file to your lab’s directory called <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> and include the following text:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>######################
+# Project Specific
+######################
+/build/www/**
+/src/test/javascript/coverage/
+/src/test/javascript/PhantomJS*/
+
+######################
+# Node
+######################
+/node/
+node_tmp/
+node_modules/
+npm-debug.log.*
+
+######################
+# SASS
+######################
+.sass-cache/
+
+######################
+# Eclipse
+######################
+*.pydevproject
+.project
+.metadata
+tmp/
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+.factorypath
+/src/main/resources/rebel.xml
+
+# External tool builders
+.externalToolBuilders/**
+
+# Locally stored &quot;Eclipse launch configurations&quot;
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+######################
+# Intellij
+######################
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+
+######################
+# Visual Studio Code
+######################
+.vscode/
+
+######################
+# Maven
+######################
+/log/
+*/target/**
+######################
+# Gradle
+######################
+.gradle/
+/build/
+
+######################
+# Package Files
+######################
+*.jar
+*.war
+*.ear
+*.db
+
+######################
+# Windows
+######################
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+######################
+# Mac OSX
+######################
+.DS_Store
+.svn
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+######################
+# Directories
+######################
+/bin/
+/deploy/
+
+######################
+# Logs
+######################
+*.log
+
+######################
+# Others
+######################
+*.class
+*.*~
+*~
+.merge_file*
+
+######################
+# Gradle Wrapper
+######################
+!gradle/wrapper/gradle-wrapper.jar
+
+######################
+# Maven Wrapper
+######################
+!.mvn/wrapper/maven-wrapper.jar
+
+######################
+# ESLint
+######################
+.eslintcache
+/.idea/
+</pre></div>
+</div>
+</section>
+<section class="section" id="part-one">
+<h3>Part One</h3>
+<p>You need to implement two classes: <code class="docutils literal notranslate"><span class="pre">WorldClock</span></code> and <code class="docutils literal notranslate"><span class="pre">WorldClockDriver</span></code>.</p>
+<p>The class skeleton is under the <cite>com.devmountain.currentdate</cite> package.</p>
+<p>For class <code class="docutils literal notranslate"><span class="pre">WorldClock</span></code>, please implement the following methods:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">LocalDate</span> <span class="nf">getNowForDate</span><span class="p">();</span>
+<span class="kd">public</span> <span class="n">LocalDateTime</span> <span class="nf">getNowForDateAndTime</span><span class="p">();</span>
+<span class="kd">public</span> <span class="n">DayOfWeek</span> <span class="nf">getDayOfWeekForNow</span><span class="p">();</span>
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">getDayOfMonthForNow</span><span class="p">();</span>
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">getDayOfYearForNow</span><span class="p">();</span>
+<span class="kd">public</span> <span class="n">ZonedDateTime</span> <span class="nf">getNowDateTimeForNewYork</span><span class="p">();</span>
+<span class="kd">public</span> <span class="n">ZonedDateTime</span> <span class="nf">getNowDateTimeForLA</span><span class="p">();</span>
+<span class="kd">public</span> <span class="n">ZonedDateTime</span> <span class="nf">getNowDateTimeForLondon</span><span class="p">();</span>
+<span class="kd">public</span> <span class="n">ZonedDateTime</span> <span class="nf">getNowDateTimeForMoscow</span><span class="p">();</span>
+<span class="kd">public</span> <span class="n">ZonedDateTime</span> <span class="nf">getNowDateTimeForTokyo</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">WorldClockDriver</span></code>, you need instantiate <code class="docutils literal notranslate"><span class="pre">WorldClock</span></code> and then print out the results of each API provided by the class <code class="docutils literal notranslate"><span class="pre">WorldClock</span></code>.</p>
+<p>Note: When you print out the results of <code class="docutils literal notranslate"><span class="pre">WorldClock</span></code> APIs, please use <code class="docutils literal notranslate"><span class="pre">DateTimeFormatter</span></code> to format the <code class="docutils literal notranslate"><span class="pre">Date</span></code> value to make them more user-friendly.</p>
+<p>The two empty classes <code class="docutils literal notranslate"><span class="pre">WorldClock</span></code> and <code class="docutils literal notranslate"><span class="pre">WorldClockDriver</span></code> are already created under the package <cite>com.devmountain.currentdate</cite>. What you need to do is implement them using Java <code class="docutils literal notranslate"><span class="pre">Date</span></code>, <code class="docutils literal notranslate"><span class="pre">Time</span></code> and <code class="docutils literal notranslate"><span class="pre">DateTimeFormatter</span></code>.</p>
+<p>Sample output:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">nowLocalDate</span><span class="o">=</span><span class="mi">2021</span><span class="o">/</span><span class="mi">12</span><span class="o">/</span><span class="mo">01</span>
+<span class="n">nowLocalDateTime</span><span class="o">=</span><span class="mi">2021</span><span class="o">/</span><span class="mi">12</span><span class="o">/</span><span class="mo">01</span> <span class="mi">18</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">35</span>
+
+<span class="n">owLocalDate</span><span class="p">.</span><span class="na">getDayOfWeek</span><span class="p">()</span><span class="o">=</span><span class="n">WEDNESDAY</span>
+<span class="n">owLocalDate</span><span class="p">.</span><span class="na">getDayOfMonth</span><span class="p">()</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">owLocalDate</span><span class="p">.</span><span class="na">getDayOfYear</span><span class="p">()</span><span class="o">=</span><span class="mi">335</span>
+
+<span class="n">nowZonedDateTimeForNewYork</span><span class="o">=</span><span class="mi">2021</span><span class="o">/</span><span class="mi">12</span><span class="o">/</span><span class="mo">01</span> <span class="mi">18</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">35</span>
+<span class="n">nowZonedDateTimeForNewYork</span><span class="p">.</span><span class="na">getZone</span><span class="p">()</span><span class="o">=</span><span class="n">America</span><span class="o">/</span><span class="n">New_York</span>
+
+<span class="n">nowZonedDateTimeForLA</span><span class="o">=</span><span class="mi">2021</span><span class="o">/</span><span class="mi">12</span><span class="o">/</span><span class="mo">01</span> <span class="mi">15</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">35</span>
+<span class="n">nowZonedDateTimeForLA</span><span class="p">.</span><span class="na">getZone</span><span class="p">()</span><span class="o">=</span><span class="n">America</span><span class="o">/</span><span class="n">Los_Angeles</span>
+
+<span class="n">nowZonedDateTimeForLondon</span><span class="o">=</span><span class="mi">2021</span><span class="o">/</span><span class="mi">12</span><span class="o">/</span><span class="mo">01</span> <span class="mi">23</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">35</span>
+<span class="n">nowZonedDateTimeForLondon</span><span class="p">.</span><span class="na">getZone</span><span class="p">()</span><span class="o">=</span><span class="n">Europe</span><span class="o">/</span><span class="n">London</span>
+
+<span class="n">nowZonedDateTimeForMoscow</span><span class="o">=</span><span class="mi">2021</span><span class="o">/</span><span class="mi">12</span><span class="o">/</span><span class="mo">02</span> <span class="mo">02</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">35</span>
+<span class="n">nowZonedDateTimeForMoscow</span><span class="p">.</span><span class="na">getZone</span><span class="p">()</span><span class="o">=</span><span class="n">Europe</span><span class="o">/</span><span class="n">Moscow</span>
+
+<span class="n">nowZonedDateTimeForTokyo</span><span class="o">=</span><span class="mi">2021</span><span class="o">/</span><span class="mi">12</span><span class="o">/</span><span class="mo">02</span> <span class="mi">08</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">35</span>
+<span class="n">nowZonedDateTimeForTokyo</span><span class="p">.</span><span class="na">getZone</span><span class="p">()</span><span class="o">=</span><span class="n">Asia</span><span class="o">/</span><span class="n">Tokyo</span>
+</pre></div>
+</div>
+</section>
+<section class="section" id="part-two">
+<h3>Part Two</h3>
+<p>Using Java <code class="docutils literal notranslate"><span class="pre">Date</span></code> and <code class="docutils literal notranslate"><span class="pre">Time</span></code> libraries, create a new class called <code class="docutils literal notranslate"><span class="pre">CalendarHelper</span></code>.</p>
+<p>The class skeleton is under the <cite>com.devmountain.parse</cite> package.</p>
+<p>This class should do the following:</p>
+<ul class="simple">
+<li><p>Ask the user for their birthday and add it to this list</p></li>
+<li><p>Print the current date</p></li>
+<li><p>Display the days remaining until all holidays in the list (ex: if the current day is December 10, there are 15 days remaining until Christmas)</p></li>
+<li><p>Alert the user which holiday is coming soonest (There are 3 holidays that have been initialized in this class - New Years, July 4th, and Christmas)</p></li>
+</ul>
+<p>Note: Leap year will make the calculation be complicated. Thus, let’s ignore leap years. In other words, do not use leap year when you give a birthday date. Here are some leap years:</p>
+<ul class="simple">
+<li><p>1988</p></li>
+<li><p>1992</p></li>
+<li><p>1996</p></li>
+<li><p>2000</p></li>
+<li><p>2004</p></li>
+<li><p>2008</p></li>
+<li><p>2012</p></li>
+<li><p>2016</p></li>
+<li><p>2020</p></li>
+<li><p>2024</p></li>
+</ul>
+<p>The following is a sample output when you execute <code class="docutils literal notranslate"><span class="pre">CalendarHelperDriver</span></code> class.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Please</span> <span class="n">enter</span> <span class="n">the</span> <span class="n">month</span> <span class="n">and</span> <span class="n">day</span> <span class="n">of</span> <span class="n">you</span> <span class="n">birthday</span> <span class="n">in</span> <span class="n">the</span> <span class="n">format</span> <span class="n">as</span> <span class="n">M</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">yyyy</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="na">g</span><span class="p">.</span> <span class="mi">09</span><span class="o">/</span><span class="mo">03</span><span class="o">/</span><span class="mi">1997</span> <span class="k">for</span> <span class="n">September</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1997</span>
+<span class="mi">12</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="mi">1998</span>
+<span class="n">You</span> <span class="n">entered</span><span class="p">:</span> <span class="mi">12</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="mi">1998</span>
+<span class="n">Do</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="k">continue</span><span class="o">?</span> <span class="n">Yes</span> <span class="n">or</span> <span class="n">No</span><span class="o">?</span>
+<span class="n">y</span>
+<span class="n">The</span> <span class="n">current</span> <span class="n">date</span> <span class="n">is</span><span class="p">:</span> <span class="mi">12</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="mi">2021</span>
+
+<span class="n">There</span> <span class="n">are</span> <span class="mi">214</span> <span class="n">days</span> <span class="n">remaining</span> <span class="n">before</span> <span class="nf">Holiday</span> <span class="p">(</span><span class="mi">7</span><span class="o">/</span><span class="mi">4</span><span class="o">/</span><span class="mi">2022</span><span class="p">)</span>
+
+<span class="n">There</span> <span class="n">are</span> <span class="mi">30</span> <span class="n">days</span> <span class="n">remaining</span> <span class="n">before</span> <span class="nf">Holiday</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="mi">2022</span><span class="p">)</span>
+
+<span class="n">There</span> <span class="n">are</span> <span class="mi">23</span> <span class="n">days</span> <span class="n">remaining</span> <span class="n">before</span> <span class="nf">Holiday</span> <span class="p">(</span><span class="mi">12</span><span class="o">/</span><span class="mi">25</span><span class="o">/</span><span class="mi">2021</span><span class="p">)</span>
+<span class="n">the</span> <span class="n">closest</span> <span class="n">Holiday</span> <span class="n">to</span> <span class="n">the</span> <span class="n">current</span> <span class="nf">date</span> <span class="p">(</span><span class="mi">12</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="mi">2021</span><span class="p">)</span> <span class="n">is</span><span class="p">:</span> <span class="mi">12</span><span class="o">/</span><span class="mi">25</span><span class="o">/</span><span class="mi">2021</span>
+<span class="n">There</span> <span class="n">are</span> <span class="mi">364</span> <span class="n">days</span> <span class="n">remaining</span> <span class="n">before</span> <span class="n">your</span> <span class="mi">24</span><span class="n">th</span> <span class="nf">birthday</span> <span class="p">(</span><span class="mi">12</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="mi">2022</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section class="section" id="references">
+<h2>References</h2>
+<section class="section" id="getting-current-date-and-time">
+<h3>Getting Current Date and Time</h3>
+<p>This next few example show you how to get the current date time from the new Java 8 <code class="docutils literal notranslate"><span class="pre">java.time.*</span></code> like <code class="docutils literal notranslate"><span class="pre">Localdate</span></code>, <code class="docutils literal notranslate"><span class="pre">LocalTime</span></code>, <code class="docutils literal notranslate"><span class="pre">LocalDateTime</span></code>, <code class="docutils literal notranslate"><span class="pre">ZonedDateTime</span></code> and also the legacy date time APIs like <code class="docutils literal notranslate"><span class="pre">java.util.Date</span></code> and <code class="docutils literal notranslate"><span class="pre">java.util.Calendar</span></code>.</p>
+<p><strong>For java.time.LocalDate, uses LocalDate.now()</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateTimeFormatter</span> <span class="n">dtf</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;uuuu/MM/dd&quot;</span><span class="p">);</span>
+<span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">dtf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">localDate</span><span class="p">));</span>
+<span class="c1">//The printout will be something like 2021/12/02 which depends on the current date</span>
+</pre></div>
+</div>
+<p><strong>For java.time.localTime, uses LocalTime.now()</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateTimeFormatter</span> <span class="n">dtf</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;HH:mm:ss&quot;</span><span class="p">);</span>
+<span class="n">LocalTime</span> <span class="n">localTime</span> <span class="o">=</span> <span class="n">LocalTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">dtf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">localTime</span><span class="p">));</span>            <span class="c1">// 16:37:15</span>
+</pre></div>
+</div>
+<p><strong>For java.time.ZonedDateTime, uses ZonedDateTime.now()</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// get current date-time, with system default time zone</span>
+<span class="n">DateTimeFormatter</span> <span class="n">dtf</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;uuuu/MM/dd HH:mm:ss&quot;</span><span class="p">);</span>
+<span class="n">ZonedDateTime</span> <span class="n">now</span> <span class="o">=</span> <span class="n">ZonedDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">dtf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">now</span><span class="p">));</span>                  <span class="c1">// 2021/03/22 16:37:15</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">now</span><span class="p">.</span><span class="na">getOffset</span><span class="p">());</span>                  <span class="c1">// +08:00</span>
+
+<span class="c1">// get current date-time, with a specified time zone</span>
+<span class="n">ZonedDateTime</span> <span class="n">japanDateTime</span> <span class="o">=</span> <span class="n">now</span><span class="p">.</span><span class="na">withZoneSameInstant</span><span class="p">(</span><span class="n">ZoneId</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;Asia/Tokyo&quot;</span><span class="p">));</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">dtf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">japanDateTime</span><span class="p">));</span>        <span class="c1">// 2021/03/22 17:37:15</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">japanDateTime</span><span class="p">.</span><span class="na">getOffset</span><span class="p">());</span>        <span class="c1">// +09:00</span>
+</pre></div>
+</div>
+<p>Note: In the above java.time.* API, java.time.format.DateTimeFormatter is used to format the current date</p>
+<p><strong>DayOfWeek, DayOfMonth, DayOfYear</strong></p>
+<p>How to check DayOfWeek (e.g. Friday), DayOfMonth (e.g. 10th day of the month) and DayOfYear (e.g. 300th day of the year)</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;owLocalDate.DayOfWeek()=&quot;</span> <span class="o">+</span> <span class="n">nowLocalDate</span><span class="p">.</span><span class="na">getDayOfWeek</span><span class="p">());</span>  <span class="c1">//e.g. Friday</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;owLocalDate.DayOfMonth()=&quot;</span> <span class="o">+</span> <span class="n">nowLocalDate</span><span class="p">.</span><span class="na">getDayOfMonth</span><span class="p">());</span> <span class="c1">//e.g. 10</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;owLocalDate.DayOfYear()=&quot;</span> <span class="o">+</span> <span class="n">nowLocalDate</span><span class="p">.</span><span class="na">getDayOfYear</span><span class="p">());</span>   <span class="c1">//e.g. 300</span>
+</pre></div>
+</div>
+<p><strong>For java.util.Date, uses new Date()</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateFormat</span> <span class="n">dateFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="p">(</span><span class="s">&quot;yyyy/MM/dd HH:mm:ss&quot;</span><span class="p">);</span>
+<span class="n">Date</span> <span class="n">date</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Date</span><span class="p">();</span>
+<span class="c1">//Another way to get the current date time is: Date date = new Date(System.currentTimeMillis());</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">dateFormat</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">date</span><span class="p">));</span>           <span class="c1">// 2021/03/22 16:37:15</span>
+</pre></div>
+</div>
+<p><strong>For java.util.Calendar, uses Calendar.getInstance()</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateFormat</span> <span class="n">dateFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="p">(</span><span class="s">&quot;yyyy/MM/dd HH:mm:ss&quot;</span><span class="p">);</span>
+<span class="n">Calendar</span> <span class="n">cal</span> <span class="o">=</span> <span class="n">Calendar</span><span class="p">.</span><span class="na">getInstance</span><span class="p">();</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">dateFormat</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">cal</span><span class="p">.</span><span class="na">getTime</span><span class="p">()));</span>  <span class="c1">// 2021/03/22 16:37:15</span>
+</pre></div>
+</div>
+<p>Note: In the above legacy java.util.Date and java.util.Calendar, java.text.SimpleDateFormat is used to format the current date</p>
+</section>
+<section class="section" id="comparing-dates-with-java-time">
+<h3>Comparing Dates with <code class="docutils literal notranslate"><span class="pre">java.time.*</span></code></h3>
+<p>Compare two dates and times using <code class="docutils literal notranslate"><span class="pre">java.time.*</span></code> API</p>
+<p>All the new Java 8 <code class="docutils literal notranslate"><span class="pre">java.time.*</span></code> classes, contain similar methods (<code class="docutils literal notranslate"><span class="pre">compareTo()</span></code>, <code class="docutils literal notranslate"><span class="pre">isBefore()</span></code>, <code class="docutils literal notranslate"><span class="pre">isAfter()</span></code> and <code class="docutils literal notranslate"><span class="pre">isEqual()</span></code>) to compare two dates, and they work the same way.</p>
+<ul class="simple">
+<li><p>java.time.LocalDate – date without time, no time-zone.</p></li>
+<li><p>java.time.LocalTime – time without date, no time-zone.</p></li>
+<li><p>java.time.LocalDateTimejava.time.LocalDateTime – date and time, no time-zone.</p></li>
+<li><p>java.time.ZonedDateTime – date and time, with time-zone.</p></li>
+</ul>
+<p><strong>LocalDate</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateTimeFormatter</span> <span class="n">dtf</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;uuuu-MM-dd&quot;</span><span class="p">);</span>
+
+<span class="n">LocalDate</span> <span class="n">date1</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-02-01&quot;</span><span class="p">,</span> <span class="n">dtf</span><span class="p">);</span>
+<span class="n">LocalDate</span> <span class="n">date2</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-01-31&quot;</span><span class="p">,</span> <span class="n">dtf</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date1 : &quot;</span> <span class="o">+</span> <span class="n">date1</span><span class="p">);</span>  <span class="c1">//output as &quot;date1 : 2020-02-01&quot;</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date2 : &quot;</span> <span class="o">+</span> <span class="n">date2</span><span class="p">);</span>  <span class="c1">//output as &quot;date2 : 2020-01-31&quot;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">isEqual</span><span class="p">(</span><span class="n">date2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is equal Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">isBefore</span><span class="p">(</span><span class="n">date2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is before Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">isAfter</span><span class="p">(</span><span class="n">date2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is after Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// test compareTo</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="n">date2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is after Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="n">date2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is before Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="n">date2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is equal to Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;How to get here?&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>LocalDateTime</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateTimeFormatter</span> <span class="n">dtf</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;uuuu-MM-dd HH:mm:ss&quot;</span><span class="p">);</span>
+
+<span class="n">LocalDateTime</span> <span class="n">date1</span> <span class="o">=</span> <span class="n">LocalDateTime</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-01-31 11:44:43&quot;</span><span class="p">,</span> <span class="n">dtf</span><span class="p">);</span>
+<span class="n">LocalDateTime</span> <span class="n">date2</span> <span class="o">=</span> <span class="n">LocalDateTime</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-01-31 11:44:44&quot;</span><span class="p">,</span> <span class="n">dtf</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date1 : &quot;</span> <span class="o">+</span> <span class="n">date1</span><span class="p">);</span>  <span class="c1">//Print out as &quot;date1 : 2020-01-31T11:44:43&quot;</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date2 : &quot;</span> <span class="o">+</span> <span class="n">date2</span><span class="p">);</span>  <span class="c1">//Print out as &quot;date2 : 2020-01-31T11:44:44&quot;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">isEqual</span><span class="p">(</span><span class="n">date2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is equal Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">isBefore</span><span class="p">(</span><span class="n">date2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is before Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">isAfter</span><span class="p">(</span><span class="n">date2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is after Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Check if a date is within a certain range</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isWithinRange</span><span class="p">(</span><span class="n">LocalDate</span> <span class="n">startDate</span><span class="p">,</span>
+<span class="n">LocalDate</span> <span class="n">endDate</span><span class="p">,</span>
+<span class="n">LocalDate</span> <span class="n">testDate</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="c1">// exclusive startDate and endDate</span>
+<span class="c1">//return testDate.isBefore(endDate) &amp;&amp; testDate.isAfter(startDate);</span>
+
+<span class="c1">// inclusive startDate and endDate</span>
+<span class="k">return</span> <span class="p">(</span><span class="n">testDate</span><span class="p">.</span><span class="na">isEqual</span><span class="p">(</span><span class="n">startDate</span><span class="p">)</span> <span class="o">||</span> <span class="n">testDate</span><span class="p">.</span><span class="na">isEqual</span><span class="p">(</span><span class="n">endDate</span><span class="p">))</span>
+        <span class="o">||</span> <span class="p">(</span><span class="n">testDate</span><span class="p">.</span><span class="na">isBefore</span><span class="p">(</span><span class="n">endDate</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">testDate</span><span class="p">.</span><span class="na">isAfter</span><span class="p">(</span><span class="n">startDate</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Check if the date is older than 6 months</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateTimeFormatter</span> <span class="n">dtf</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;uuuu-MM-dd&quot;</span><span class="p">);</span>
+
+<span class="n">LocalDate</span> <span class="n">now</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2021-12-05&quot;</span><span class="p">,</span> <span class="n">dtf</span><span class="p">);</span>
+<span class="n">LocalDate</span> <span class="n">futureDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2022-05-05&quot;</span><span class="p">,</span> <span class="n">dtf</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;now: &quot;</span> <span class="o">+</span> <span class="n">now</span><span class="p">);</span> <span class="c1">//Print out as &quot;now: 2021-12-05&quot;</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;futureDate: &quot;</span> <span class="o">+</span> <span class="n">futureDate</span><span class="p">);</span> <span class="c1">//Print out as &quot;futureDate 2022-05-05&quot;</span>
+
+<span class="c1">// add 6 months</span>
+<span class="n">LocalDate</span> <span class="n">nowPlus6Months</span> <span class="o">=</span> <span class="n">now</span><span class="p">.</span><span class="na">plusMonths</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;nowPlus6Months: &quot;</span> <span class="o">+</span> <span class="n">nowPlus6Months</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;If date1 older than 6 months?&quot;</span><span class="p">);</span>
+
+<span class="c1">// if want to exclude the 2020-07-01, remove the isEqual</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">isAfter</span><span class="p">(</span><span class="n">nowPlus6Months</span><span class="p">)</span> <span class="o">||</span> <span class="n">date1</span><span class="p">.</span><span class="na">isEqual</span><span class="p">(</span><span class="n">nowPlus6Months</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Yes&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;No&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section class="section" id="comparing-dates-with-legacy-java-util-date">
+<h3>Comparing Dates with legacy <code class="docutils literal notranslate"><span class="pre">java.util.Date</span></code></h3>
+<p>Comparing dates and times using legacy <code class="docutils literal notranslate"><span class="pre">java.util.Date</span></code>, we have access to:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compareTo</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">before()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">after()</span></code> and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">equals()</span></code></p></li>
+</ul>
+<p><strong>The example below uses ``Date.compareTo`` to compare two ``java.util.Date`` in Java.</strong></p>
+<ul class="simple">
+<li><p>Return value of 0 if the argument date is equal to the Date.</p></li>
+<li><p>Return value is greater than 0 or positive if the Date is after the argument date.</p></li>
+<li><p>Return value is less than 0 or negative if the Date is before the argument date.</p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">SimpleDateFormat</span> <span class="n">sdf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="p">(</span><span class="s">&quot;yyyy-MM-dd&quot;</span><span class="p">);</span>
+<span class="n">Date</span> <span class="n">date1</span> <span class="o">=</span> <span class="n">sdf</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-01-30&quot;</span><span class="p">);</span>
+<span class="n">Date</span> <span class="n">date2</span> <span class="o">=</span> <span class="n">sdf</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-01-31&quot;</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date1 : &quot;</span> <span class="o">+</span> <span class="n">sdf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">date1</span><span class="p">));</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date2 : &quot;</span> <span class="o">+</span> <span class="n">sdf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">date2</span><span class="p">));</span>
+
+<span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">date1</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="n">date2</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;result: &quot;</span> <span class="o">+</span> <span class="n">result</span><span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is equal to Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is after Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is before Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;How to get here?&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Using ``Date.before()``, ``Date.after()`` and ``Date.equals()``</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">SimpleDateFormat</span> <span class="n">sdf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="p">(</span><span class="s">&quot;yyyy-MM-dd&quot;</span><span class="p">);</span>
+<span class="c1">//Date date1 = sdf.parse(&quot;2009-12-31&quot;);</span>
+<span class="n">Date</span> <span class="n">date1</span> <span class="o">=</span> <span class="n">sdf</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-02-01&quot;</span><span class="p">);</span>
+<span class="n">Date</span> <span class="n">date2</span> <span class="o">=</span> <span class="n">sdf</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-01-31&quot;</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date1 : &quot;</span> <span class="o">+</span> <span class="n">sdf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">date1</span><span class="p">));</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date2 : &quot;</span> <span class="o">+</span> <span class="n">sdf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">date2</span><span class="p">));</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">date2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is equal Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">after</span><span class="p">(</span><span class="n">date2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is after Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">date1</span><span class="p">.</span><span class="na">before</span><span class="p">(</span><span class="n">date2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is before Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Check if a date is within a certain range</strong></p>
+<p>Version 1:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isWithinRange</span><span class="p">(</span><span class="n">Date</span> <span class="n">startDate</span><span class="p">,</span>
+    <span class="n">Date</span> <span class="n">endDate</span><span class="p">,</span>
+    <span class="n">Date</span> <span class="n">testDate</span><span class="p">){</span>
+    <span class="kt">boolean</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">testDate</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">startDate</span><span class="p">)</span> <span class="o">||</span> <span class="n">testDate</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">endDate</span><span class="p">))</span> <span class="o">||</span>
+            <span class="p">(</span><span class="n">testDate</span><span class="p">.</span><span class="na">after</span><span class="p">(</span><span class="n">startDate</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">testDate</span><span class="p">.</span><span class="na">before</span><span class="p">(</span><span class="n">endDate</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Version 2:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isWithinRange</span><span class="p">(</span><span class="n">Date</span> <span class="n">startDate</span><span class="p">,</span>
+    <span class="n">Date</span> <span class="n">endDate</span><span class="p">,</span>
+    <span class="n">Date</span> <span class="n">testDate</span><span class="p">){</span>
+    <span class="kt">boolean</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+    <span class="c1">// compare date and time, inclusive of startDate and endDate</span>
+    <span class="c1">// getTime() returns number of milliseconds since January 1, 1970, 00:00:00 GMT</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">testDate</span><span class="p">.</span><span class="na">getTime</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">startDate</span><span class="p">.</span><span class="na">getTime</span><span class="p">())</span> <span class="o">&amp;&amp;</span>
+        <span class="p">(</span><span class="n">testDate</span><span class="p">.</span><span class="na">getTime</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">endDate</span><span class="p">.</span><span class="na">getTime</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section class="section" id="comparing-using-legacy-java-util-calendar">
+<h3>Comparing Using legacy <code class="docutils literal notranslate"><span class="pre">java.util.Calendar</span></code></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">java.util.Calendar</span></code> works the same way as <code class="docutils literal notranslate"><span class="pre">java.util.Date</span></code>. And the <code class="docutils literal notranslate"><span class="pre">Calendar</span></code> also contains these familiar methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compareTo</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">before()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">after()</span></code> and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">equals()</span></code></p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">SimpleDateFormat</span> <span class="n">sdf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="p">(</span><span class="s">&quot;yyyy-MM-dd&quot;</span><span class="p">);</span>
+<span class="n">Date</span> <span class="n">date1</span> <span class="o">=</span> <span class="n">sdf</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-02-01&quot;</span><span class="p">);</span>
+<span class="n">Date</span> <span class="n">date2</span> <span class="o">=</span> <span class="n">sdf</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;2020-01-31&quot;</span><span class="p">);</span>
+
+<span class="n">Calendar</span> <span class="n">cal1</span> <span class="o">=</span> <span class="n">Calendar</span><span class="p">.</span><span class="na">getInstance</span><span class="p">();</span>
+<span class="n">Calendar</span> <span class="n">cal2</span> <span class="o">=</span> <span class="n">Calendar</span><span class="p">.</span><span class="na">getInstance</span><span class="p">();</span>
+<span class="n">cal1</span><span class="p">.</span><span class="na">setTime</span><span class="p">(</span><span class="n">date1</span><span class="p">);</span>
+<span class="n">cal2</span><span class="p">.</span><span class="na">setTime</span><span class="p">(</span><span class="n">date2</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date1 : &quot;</span> <span class="o">+</span> <span class="n">sdf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">date1</span><span class="p">));</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;date2 : &quot;</span> <span class="o">+</span> <span class="n">sdf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">date2</span><span class="p">));</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">cal1</span><span class="p">.</span><span class="na">after</span><span class="p">(</span><span class="n">cal2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is after Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">cal1</span><span class="p">.</span><span class="na">before</span><span class="p">(</span><span class="n">cal2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is before Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">cal1</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">cal2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Date1 is equal Date2&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section class="section" id="convert-string-to-localdate">
+<h3>Convert String to LocalDate</h3>
+<p>The following is an example of converting a String to the java.time.LocalDate</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;d/MM/yyyy&quot;</span><span class="p">);</span>
+<span class="n">String</span> <span class="n">date</span> <span class="o">=</span> <span class="s">&quot;16/08/2016&quot;</span><span class="p">;</span>
+
+<span class="c1">//convert String to LocalDate</span>
+<span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">formatter</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The key is to understand the java.time.format.DateTimeFormatter <a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html" target="_blank">patterns.</a></p>
+<ul class="simple">
+<li><p>If the String is in ISO_LOCAL_DATE format, we can parse the String directly, no need conversion.</p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">String</span> <span class="n">date</span> <span class="o">=</span> <span class="s">&quot;2016-08-16&quot;</span><span class="p">;</span>
+
+<span class="c1">//default, ISO_LOCAL_DATE</span>
+<span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="n">date</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">localDate</span><span class="p">);</span>
+<span class="c1">//Output:  2016-08-16</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The below program is running fine only if the default locale understands English. For example, <code class="docutils literal notranslate"><span class="pre">Locale.US</span></code> or <code class="docutils literal notranslate"><span class="pre">Locale.English</span></code></p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;d-MMM-yyyy&quot;</span><span class="p">);</span>
+
+<span class="n">String</span> <span class="n">date</span> <span class="o">=</span> <span class="s">&quot;16-Aug-2016&quot;</span><span class="p">;</span>
+
+<span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">formatter</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">localDate</span><span class="p">);</span>  <span class="c1">//default, print ISO_LOCAL_DATE as &quot;2016-08-16&quot;</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">formatter</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">localDate</span><span class="p">));</span> <span class="c1">// print formatter date as &quot;16-Aug-2016&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Now, change the locale to Locale.FRANCE, the DateTimeFormatter will fail to parse the Aug and throws DateTimeParseException exception:</p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// not all default locale is Locale.US</span>
+<span class="c1">// simulate a France locale.</span>
+<span class="n">Locale</span><span class="p">.</span><span class="na">setDefault</span><span class="p">(</span><span class="n">Locale</span><span class="p">.</span><span class="na">FRANCE</span><span class="p">);</span>
+
+<span class="n">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;d-MMM-yyyy&quot;</span><span class="p">);</span>
+
+<span class="n">String</span> <span class="n">date</span> <span class="o">=</span> <span class="s">&quot;16-Aug-2016&quot;</span><span class="p">;</span>
+
+<span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">formatter</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">localDate</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">formatter</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">localDate</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>The exception will be thrown as below:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span>Exception in thread &quot;main&quot; java.time.format.DateTimeParseException: Text &#39;16-Aug-2016&#39; could not be parsed at index 3
+    at java.base/java.time.format.DateTimeFormatter.parseResolved0(DateTimeFormatter.java:2046)
+    at java.base/java.time.format.DateTimeFormatter.parse(DateTimeFormatter.java:1948)
+    at java.base/java.time.LocalDate.parse(LocalDate.java:428)
+</pre></div>
+</div>
+<p>The safest way is always specified a Locale.US for DateTimeFormatter.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Locale</span><span class="p">.</span><span class="na">setDefault</span><span class="p">(</span><span class="n">Locale</span><span class="p">.</span><span class="na">FRANCE</span><span class="p">);</span>
+
+<span class="c1">// no problem now, DateTimeFormatter always uses Locale.US</span>
+<span class="c1">//Even the default locale is set as Locale.FRANCE above</span>
+<span class="n">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;d-MMM-yyyy&quot;</span><span class="p">,</span> <span class="n">Locale</span><span class="p">.</span><span class="na">US</span><span class="p">);</span>
+
+<span class="n">String</span> <span class="n">date</span> <span class="o">=</span> <span class="s">&quot;16-Aug-2016&quot;</span><span class="p">;</span>
+
+<span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">formatter</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">localDate</span><span class="p">);</span>  <span class="c1">//default, print ISO_LOCAL_DATE as &quot;2016-08-16&quot;</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">formatter</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">localDate</span><span class="p">));</span> <span class="c1">// print formatted date as &quot;16-Aug-2016&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Parsing String “16/08/2016”</p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;d/MM/yyyy&quot;</span><span class="p">);</span>
+
+<span class="n">String</span> <span class="n">date</span> <span class="o">=</span> <span class="s">&quot;16/08/2016&quot;</span><span class="p">;</span>
+
+<span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">formatter</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">localDate</span><span class="p">);</span> <span class="c1">//Print out as &quot;2016-08-16&quot;</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">formatter</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">localDate</span><span class="p">));</span> <span class="c1">//print out as &quot;16/08/2016&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Parsing String “Tue, Aug 16 2016”</p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// define a locale which understand English words</span>
+<span class="n">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;E, MMM d yyyy&quot;</span><span class="p">,</span> <span class="n">Locale</span><span class="p">.</span><span class="na">US</span><span class="p">);</span>
+
+<span class="n">String</span> <span class="n">date</span> <span class="o">=</span> <span class="s">&quot;Tue, Aug 16 2016&quot;</span><span class="p">;</span>
+
+<span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">formatter</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">localDate</span><span class="p">);</span>  <span class="c1">//Print out as &quot;2016-08-16&quot;</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">formatter</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">localDate</span><span class="p">));</span> <span class="c1">//Print out as &quot;Tue, Aug 16 2016&quot;</span>
+</pre></div>
+</div>
+</section>
+<section class="section" id="convert-string-to-localdatetime">
+<h3>Convert String to LocalDateTime</h3>
+<ul class="simple">
+<li><p>Parsing String “Tuesday, Aug 16, 2016 12:10:56 PM”</p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;EEEE, MMM d, yyyy hh:mm:ss a&quot;</span><span class="p">,</span> <span class="n">Locale</span><span class="p">.</span><span class="na">US</span><span class="p">);</span>
+
+<span class="n">String</span> <span class="n">date</span> <span class="o">=</span> <span class="s">&quot;Tuesday, Aug 16, 2016 12:10:56 PM&quot;</span><span class="p">;</span>
+
+<span class="n">LocalDateTime</span> <span class="n">localDateTime</span> <span class="o">=</span> <span class="n">LocalDateTime</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">formatter</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">localDateTime</span><span class="p">);</span> <span class="c1">//print out as &quot;2016-08-16T12:10:56&quot;</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">formatter</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">localDateTime</span><span class="p">));</span>  <span class="c1">//Print out as &quot;Tuesday, Aug 16, 2016 12:10:56 PM&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Parsing String “2016-08-16T10:15:30+08:00”</p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">String</span> <span class="n">date</span> <span class="o">=</span> <span class="s">&quot;2016-08-16T10:15:30+08:00&quot;</span><span class="p">;</span>
+
+<span class="n">ZonedDateTime</span> <span class="n">result</span> <span class="o">=</span> <span class="n">ZonedDateTime</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ISO_DATE_TIME</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;ZonedDateTime : &quot;</span> <span class="o">+</span> <span class="n">result</span><span class="p">);</span> <span class="c1">//print out as &quot;ZonedDateTime : 2016-08-16T10:15:30+08:00&quot;</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;TimeZone : &quot;</span> <span class="o">+</span> <span class="n">result</span><span class="p">.</span><span class="na">getZone</span><span class="p">());</span>  <span class="c1">//Print out as &quot;TimeZone : +08:00&quot;</span>
+
+<span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="na">toLocalDate</span><span class="p">();</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;LocalDate : &quot;</span> <span class="o">+</span> <span class="n">localDate</span><span class="p">);</span>  <span class="c1">//Print out as &quot;LocalDate : 2016-08-16&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If the date is unable to parse, it will throw DateTimeParseException</p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JavaDateExample8</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">DateTimeFormatter</span> <span class="n">dtf</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="p">.</span><span class="na">ofPattern</span><span class="p">(</span><span class="s">&quot;d-MMM-yyyy&quot;</span><span class="p">,</span> <span class="n">Locale</span><span class="p">.</span><span class="na">US</span><span class="p">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="n">LocalDate</span> <span class="n">localDate</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;16-ABC-2016&quot;</span><span class="p">,</span> <span class="n">dtf</span><span class="p">);</span>
+            <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">dtf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">localDate</span><span class="p">));</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">DateTimeParseException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">System</span><span class="p">.</span><span class="na">err</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Unable to parse the date!&quot;</span><span class="p">);</span>
+            <span class="c1">//e.printStackTrace();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Unable</span> <span class="n">to</span> <span class="n">parse</span> <span class="n">the</span> <span class="n">date</span><span class="o">!</span>
+</pre></div>
+</div>
+</section>
+<section class="section" id="common-date-and-time-patterns">
+<h3>Common Date and Time Patterns</h3>
+<p>The followings are some common date and time patterns:</p>
+<ul class="simple">
+<li><p>y: Year (1996; 96)</p></li>
+<li><p>M: Month in year (July; Jul; 07)</p></li>
+<li><p>d: Day in month (1-31)</p></li>
+<li><p>E: Day name in week (Friday, Sunday)</p></li>
+<li><p>a: AM/PM marker (AM, PM)</p></li>
+<li><p>H: Hour in day (0-23)</p></li>
+<li><p>h: Hour in AM/PM (1-12)</p></li>
+<li><p>m: Minute in hour (0-60)</p></li>
+<li><p>s: Second in minute (0-60)</p></li>
+</ul>
+<p>For a full list of symbols that we can use to specify a pattern for parsing click <a class="reference external" href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns" target="_blank">here.</a></p>
+</section>
+</section>
+</section>
+
+        </main>
+
+        <footer id="page-footer">
+            <p>&copy; 2021 Devmountain</p>
+        </footer>
+      </div>
+
+      <script src="_static/main.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+  </body>
+</html>
